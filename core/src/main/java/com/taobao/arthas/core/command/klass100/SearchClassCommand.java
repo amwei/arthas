@@ -8,6 +8,8 @@ import java.util.Comparator;
 import java.util.List;
 
 import com.taobao.arthas.core.command.Constants;
+import com.taobao.arthas.core.shell.cli.Completion;
+import com.taobao.arthas.core.shell.cli.CompletionUtils;
 import com.taobao.arthas.core.shell.command.AnnotatedCommand;
 import com.taobao.arthas.core.shell.command.CommandProcess;
 import com.taobao.arthas.core.util.ClassUtils;
@@ -29,10 +31,11 @@ import com.taobao.text.util.RenderUtil;
 @Name("sc")
 @Summary("Search all the classes loaded by JVM")
 @Description(Constants.EXAMPLE +
-        "  sc -E org\\\\.apache\\\\.commons\\\\.lang\\\\.StringUtils\n" +
         "  sc -d org.apache.commons.lang.StringUtils\n" +
         "  sc -d org/apache/commons/lang/StringUtils\n" +
         "  sc -d *StringUtils\n" +
+        "  sc -d -f org.apache.commons.lang.StringUtils\n" +
+        "  sc -E org\\\\.apache\\\\.commons\\\\.lang\\\\.StringUtils\n" +
         Constants.WIKI + Constants.WIKI_HOME + "sc")
 public class SearchClassCommand extends AnnotatedCommand {
     private String classPattern;
@@ -101,4 +104,10 @@ public class SearchClassCommand extends AnnotatedCommand {
         }
     }
 
+    @Override
+    public void complete(Completion completion) {
+        if (!CompletionUtils.completeClassName(completion)) {
+            super.complete(completion);
+        }
+    }
 }
